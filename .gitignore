@@ -1,0 +1,13 @@
+# Build
+target/
+build/
+dist/
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Temporales de conversión
+_*.txt
