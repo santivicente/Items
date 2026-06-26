@@ -1,0 +1,117 @@
+@startuml EcoCarga-Clases
+title EcoCarga - Diagrama de Clases con Patrones GOF
+skinparam classAttributeIconSize 0
+
+' ===================== SINGLETON =====================
+class EstacionDeCarga <<Singleton>> {
+  - {static} instancia : EstacionDeCarga
+  - nombre : String
+  - cargadores : List<Cargador>
+  - sesiones : List<SesionDeCarga>
+  - EstacionDeCarga(nombre : String)
+  + {static} getInstancia() : EstacionDeCarga
+  + agregarCargador(c : Cargador) : void
+  + iniciarSesion(cargadorId : int, patente : String, tarifa : EstrategiaDeTarifa) : SesionDeCarga
+  + finalizarSesion(sesionId : int, kwh : double) : SesionDeCarga
+  + listarCargadores() : List<Cargador>
+}
+
+' ===================== FACTORY METHOD =====================
+abstract class Cargador {
+  - id : int
+  - ubicacion : String
+  - potenciaKw : double
+  - estado : EstadoCargador
+  + getEstado() : EstadoCargador
+  + ocupar() : void
+  + liberar() : void
+  + {abstract} tipoConector() : String
+}
+class CargadorRapidoDC
+class CargadorSemiRapidoAC
+class CargadorLento
+Cargador <|-- CargadorRapidoDC
+Cargador <|-- CargadorSemiRapidoAC
+Cargador <|-- CargadorLento
+
+enum EstadoCargador {
+  LIBRE
+  OCUPADO
+  FUERA_DE_SERVICIO
+}
+
+abstract class FabricaDeCargadores <<Creator>> {
+  + crearCargador(ubicacion : String) : Cargador
+  + {abstract} factoryMethod() : Cargador
+}
+class FabricaRapidoDC
+class FabricaSemiRapidoAC
+class FabricaLento
+FabricaDeCargadores <|-- FabricaRapidoDC
+FabricaDeCargadores <|-- FabricaSemiRapidoAC
+FabricaDeCargadores <|-- FabricaLento
+
+' ===================== STRATEGY =====================
+interface EstrategiaDeTarifa <<Strategy>> {
+  + calcularCosto(s : SesionDeCarga) : double
+}
+class TarifaPorEnergia
+class TarifaPorTiempo
+class TarifaNocturna
+class TarifaSocio
+EstrategiaDeTarifa <|.. TarifaPorEnergia
+EstrategiaDeTarifa <|.. TarifaPorTiempo
+EstrategiaDeTarifa <|.. TarifaNocturna
+EstrategiaDeTarifa <|.. TarifaSocio
+
+class SesionDeCarga {
+  - id : int
+  - patente : String
+  - fechaInicio : LocalDateTime
+  - fechaFin : LocalDateTime
+  - energiaKwh : double
+  - costo : double
+  + finalizar(kwh : double) : void
+  + calcularCosto() : double
+}
+
+' ===================== OBSERVER =====================
+interface IObservable <<Subject>> {
+  + addObserver(o : IObserver) : void
+  + removeObserver(o : IObserver) : void
+  + notificar() : void
+}
+interface IObserver {
+  + actualizar() : void
+}
+class ConfiguracionI18N {
+  - formatoFecha : String
+  - formatoMoneda : String
+  - observers : List<IObserver>
+  + setConfiguracion(fecha : String, moneda : String) : void
+  + getFormatoFecha() : String
+  + getFormatoMoneda() : String
+}
+class FormatoFecha {
+  - formatoActual : String
+  + actualizar() : void
+  + mostrarFecha() : String
+}
+class FormatoMoneda {
+  - formatoActual : String
+  + actualizar() : void
+  + mostrarMoneda() : String
+}
+IObservable <|.. ConfiguracionI18N
+IObserver <|.. FormatoFecha
+IObserver <|.. FormatoMoneda
+
+' ===================== RELACIONES =====================
+EstacionDeCarga "1" o-- "0..*" Cargador
+EstacionDeCarga "1" o-- "0..*" SesionDeCarga
+SesionDeCarga "1" --> "1" Cargador
+SesionDeCarga "1" --> "1" EstrategiaDeTarifa : usa
+FabricaDeCargadores ..> Cargador : crea
+Cargador --> EstadoCargador
+ConfiguracionI18N "1" o-- "0..*" IObserver
+@enduml

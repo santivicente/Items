@@ -1,0 +1,20 @@
+@startuml EcoCarga-Seq-FinalizarCarga
+title Finalizar Carga (Strategy + Singleton)
+actor Operador
+participant ":SesionService" as S
+participant ":EstacionDeCarga" as E
+participant "sesion:SesionDeCarga" as Se
+participant "tarifa:TarifaPorEnergia" as T
+
+Operador -> S : finalizar(sesionId, kwh)
+S -> E : getInstancia()
+E --> S : instancia
+S -> E : finalizarSesion(sesionId, kwh)
+E -> Se : finalizar(kwh)
+Se -> Se : calcularCosto()
+Se -> T : calcularCosto(this)
+T --> Se : costo
+Se --> E : ok
+E --> S : sesion (con costo)
+S --> Operador : ticket (kwh, tiempo, costo)
+@enduml

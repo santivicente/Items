@@ -1,0 +1,17 @@
+@startuml EcoCarga-Seq-Configuracion
+title Cambiar Configuracion I18N (Observer)
+actor Operador
+participant "config:ConfiguracionI18N" as Cfg
+participant "fecha:FormatoFecha" as FF
+participant "moneda:FormatoMoneda" as FM
+
+Operador -> Cfg : setConfiguracion("dd/MM/yyyy", "ARS")
+Cfg -> Cfg : notificar()
+Cfg -> FF : actualizar()
+FF -> Cfg : getFormatoFecha()
+Cfg --> FF : "dd/MM/yyyy"
+Cfg -> FM : actualizar()
+FM -> Cfg : getFormatoMoneda()
+Cfg --> FM : "ARS"
+Cfg --> Operador : configuracion aplicada
+@enduml
