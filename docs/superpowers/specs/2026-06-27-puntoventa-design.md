@@ -73,7 +73,7 @@ ItemVenta (interface, Composite Component)
  └─ getDescripcion() : String
    ├─ OrdenVenta        (Composite raíz)  → items : List<ItemVenta> + EstrategiaDescuento
    ├─ ItemCompuesto     (Composite)       → partes : List<ItemVenta>
-   └─ ItemRubroSimple   (Leaf)            → PrecioProducto, Seguro, descuento
+   └─ ItemSimple        (Leaf)            → nombre, precio
 
 EstrategiaDescuento (interface, Strategy)
  └─ SinDescuento | DescuentoPorcentaje | DescuentoVIP
@@ -95,7 +95,7 @@ colaboración.
 - **Motivación:** una orden puede contener productos sueltos y kits (que a su vez contienen productos).
   El vendedor calcula el total sin distinguir si un ítem es simple o compuesto.
 - **Participantes:** `ItemVenta` (Component), `OrdenVenta` (Composite raíz), `ItemCompuesto`
-  (Composite), `ItemRubroSimple` (Leaf), más helpers `PrecioProducto` y `Seguro`.
+  (Composite), `ItemSimple` (Leaf, con `nombre` y `precio`).
 - **Colaboración:** `calcularTotal()` se delega recursivamente; cada hoja devuelve su precio y cada
   compuesto suma el de sus partes.
 - **Origen:** reutiliza el TP10 (diagrama validado por el equipo).
@@ -176,7 +176,7 @@ en un ticket de caja.
 controller/   → OrdenController, ConfiguracionController
 service/      → OrdenService (orquesta Composite + Strategy + Singleton)
 domain/
-  composite/  → ItemVenta, OrdenVenta, ItemCompuesto, ItemRubroSimple, PrecioProducto, Seguro
+  composite/  → ItemVenta, OrdenVenta, ItemCompuesto, ItemSimple
   descuento/  → EstrategiaDescuento + implementaciones (Strategy)
   i18n/       → ConfiguracionI18N, IObservable, IObserver, FormatoMoneda, FormatoFecha (Observer)
   PuntoDeVenta (Singleton)

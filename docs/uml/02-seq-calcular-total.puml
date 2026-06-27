@@ -3,9 +3,9 @@ title Crear Orden y Calcular Total (Composite + Singleton)
 actor Vendedor
 participant ":PuntoDeVenta" as PV
 participant "orden:OrdenVenta" as O
-participant "item:ItemRubroSimple" as I
+participant "item:ItemSimple" as I
 participant "kit:ItemCompuesto" as K
-participant "parte:ItemRubroSimple" as P
+participant "parte:ItemSimple" as P
 
 Vendedor -> PV : getInstancia()
 PV --> Vendedor : instancia

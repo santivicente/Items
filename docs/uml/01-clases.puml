@@ -36,27 +36,17 @@ class ItemCompuesto <<Composite>> {
   + calcularTotal() : double
   + getDescripcion() : String
 }
-class ItemRubroSimple <<Leaf>> {
+class ItemSimple <<Leaf>> {
   - nombre : String
-  - descuento : double
+  - precio : double
   + calcularTotal() : double
   + getDescripcion() : String
 }
-class PrecioProducto {
-  - valor : double
-  + getPrecio() : double
-}
-class Seguro {
-  - prima : double
-  + calcularPrima() : double
-}
 ItemVenta <|.. OrdenVenta
 ItemVenta <|.. ItemCompuesto
-ItemVenta <|.. ItemRubroSimple
+ItemVenta <|.. ItemSimple
 OrdenVenta o-- "0..*" ItemVenta
 ItemCompuesto o-- "0..*" ItemVenta
-ItemRubroSimple --> PrecioProducto
-ItemRubroSimple --> Seguro
 
 ' ===================== STRATEGY =====================
 interface EstrategiaDescuento <<Strategy>> {

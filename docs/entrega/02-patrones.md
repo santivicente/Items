@@ -17,10 +17,10 @@ Permite que el cliente trate de manera uniforme tanto objetos individuales como 
 la misma interfaz para ambos.
 
 **3. Motivación:** un vendedor necesita calcular el total de una orden que puede contener ítems simples
-(un producto con precio fijo, seguro opcional y descuento) y también ítems compuestos (kits que agrupan
-productos y que a su vez pueden contener sub-ítems). El código del vendedor calcula el total sin saber
-si trata con un ítem simple o con un conjunto anidado. El Composite define la interfaz común `ItemVenta`
-con `calcularTotal()`; cada nodo delega recursivamente en sus hijos.
+(un producto con su precio) y también ítems compuestos (kits que agrupan productos y que a su vez pueden
+contener sub-ítems). El código del vendedor calcula el total sin saber si trata con un ítem simple o con
+un conjunto anidado. El Composite define la interfaz común `ItemVenta` con `calcularTotal()`; cada nodo
+delega recursivamente en sus hijos.
 
 **4. Estructura:** ver `docs/uml/01-clases.puml` y la secuencia `docs/uml/02-seq-calcular-total.puml`
 → `VentaSimple-Seq-CalcularTotal.png`.
@@ -32,13 +32,11 @@ con `calcularTotal()`; cada nodo delega recursivamente en sus hijos.
 | Component | `ItemVenta` (interfaz) | Declara `calcularTotal()` y `getDescripcion()` |
 | Composite (raíz) | `OrdenVenta` | Contiene lista de `ItemVenta`; `calcularTotal()` itera y suma |
 | Composite | `ItemCompuesto` | Agrupación interna (kit); delega `calcularTotal()` a sus partes |
-| Leaf | `ItemRubroSimple` | Calcula su precio usando `PrecioProducto`, `Seguro` y descuento |
-| Helper | `PrecioProducto` | Encapsula el valor monetario del ítem |
-| Helper | `Seguro` | Calcula la prima adicional sobre el ítem |
+| Leaf | `ItemSimple` | Producto individual; tiene `nombre` y `precio`, y devuelve su precio |
 | Client | `Vendedor` / `OrdenService` | Crea la orden, agrega ítems y llama `calcularTotal()` |
 
 **6. Colaboración:** el vendedor agrega ítems simples y compuestos a la orden y llama `calcularTotal()`.
-`OrdenVenta` itera su lista; cada `ItemRubroSimple` retorna su precio y cada `ItemCompuesto` suma
+`OrdenVenta` itera su lista; cada `ItemSimple` retorna su precio y cada `ItemCompuesto` suma
 recursivamente sus partes. El total acumulado vuelve al vendedor.
 
 **Origen:** reutiliza el TP10 (diagrama de clases ya validado por el equipo).
