@@ -7,15 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<header>
-    <h1>🛒 VentaSimple</h1>
-    <nav>
-        <a th:href="@{/}">Armar orden</a>
-        <a th:href="@{/resumen}">Resumen</a>
-        <a th:href="@{/total}">Total y descuento</a>
-        <a th:href="@{/preferencias}">Preferencias</a>
-    </nav>
-</header>
+<header th:replace="~{fragments :: cabecera('total')}"></header>
 
 <main>
     <div class="card">
@@ -29,9 +21,9 @@
         <form th:action="@{/total}" method="post">
             <label for="tipo">Descuento</label>
             <select id="tipo" name="tipo" onchange="this.form.submit()">
-                <option value="sin">Sin descuento</option>
-                <option value="porcentaje">Descuento 10%</option>
-                <option value="vip">Cliente VIP (15%)</option>
+                <option value="sin" th:selected="${tipoDescuento == 'sin'}">Sin descuento</option>
+                <option value="porcentaje" th:selected="${tipoDescuento == 'porcentaje'}">Descuento 10%</option>
+                <option value="vip" th:selected="${tipoDescuento == 'vip'}">Cliente VIP (15%)</option>
             </select>
             <noscript><button type="submit">Aplicar</button></noscript>
         </form>

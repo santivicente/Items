@@ -82,5 +82,17 @@ public class OrdenController {
         model.addAttribute("subtotal", orden.calcularTotal());
         model.addAttribute("totalFinal", orden.calcularTotalFinal());
         model.addAttribute("descuentoNombre", orden.getDescuento().getNombre());
+        model.addAttribute("tipoDescuento", tipoDescuentoActual(orden));
+    }
+
+    /** Mapea la estrategia actual a la clave del desplegable, para marcar la opción elegida. */
+    private String tipoDescuentoActual(OrdenVenta orden) {
+        if (orden.getDescuento() instanceof DescuentoPorcentaje) {
+            return "porcentaje";
+        }
+        if (orden.getDescuento() instanceof DescuentoVIP) {
+            return "vip";
+        }
+        return "sin";
     }
 }

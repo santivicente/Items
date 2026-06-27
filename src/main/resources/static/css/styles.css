@@ -33,11 +33,24 @@ header h1 { font-size: 20px; margin: 0; }
 nav a {
     color: #fff;
     text-decoration: none;
-    margin-right: 14px;
+    margin-right: 6px;
+    padding: 6px 10px;
+    border-radius: 6px;
     font-weight: 600;
     opacity: 0.92;
 }
 nav a:hover { text-decoration: underline; opacity: 1; }
+nav a.activo {
+    background: #fff;
+    color: var(--azul);
+    opacity: 1;
+}
+
+/* Accesibilidad: foco visible para navegación por teclado */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 3px solid #ffb300;
+    outline-offset: 2px;
+}
 
 main {
     max-width: 760px;

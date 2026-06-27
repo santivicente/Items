@@ -7,15 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-<header>
-    <h1>🛒 VentaSimple</h1>
-    <nav>
-        <a th:href="@{/}">Armar orden</a>
-        <a th:href="@{/resumen}">Resumen</a>
-        <a th:href="@{/total}">Total y descuento</a>
-        <a th:href="@{/preferencias}">Preferencias</a>
-    </nav>
-</header>
+<header th:replace="~{fragments :: cabecera('orden')}"></header>
 
 <main>
     <div class="card">
