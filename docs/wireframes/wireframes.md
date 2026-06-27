@@ -1,75 +1,69 @@
-# Wireframes de baja fidelidad — EcoCarga
+# Wireframes de baja fidelidad — VentaSimple
 
 > Recrear en **Excalidraw o draw.io** a partir de estas guías y exportar como imagen para el Word.
-> Regla de diseño inclusivo: todo estado se comunica por **color + texto/ícono** (no solo color).
+> Diseño inclusivo: los montos y estados se comunican con texto + formato claro (no solo color).
 
-## 1. Tablero de cargadores (home)
+## 1. Armar orden (home)
 ```
-┌───────────────────────────────────────────────┐
-│ EcoCarga              [ Preferencias ⚙ ]        │
-├───────────────────────────────────────────────┤
-│  Cargadores                  [ + Alta cargador ]│
-│                                                 │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
-│  │Surtidor 1│  │Surtidor 2│  │Surtidor 3│       │
-│  │ 🟢 LIBRE │  │ 🔴 OCUP. │  │ ⚫ F.SERV.│       │
-│  │ 50 kW DC │  │ 22 kW AC │  │  7 kW    │       │
-│  │[ Iniciar]│  │[Finaliz.]│  │          │       │
-│  └──────────┘  └──────────┘  └──────────┘       │
-└───────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│ VentaSimple — Orden #OV-001     [ Preferencias ⚙ ]│
+├─────────────────────────────────────────────────┤
+│ Buscar producto: [ Notebook        ] [ Agregar ] │
+│                                                   │
+│ [ + Crear kit ]                                   │
+│                                                   │
+│ Ítems en la orden:                  Subtotal      │
+│  • Notebook ............................ $1.500   │
+│  • Monitor ............................. $  900   │
+│  • Kit Accesorios (2) .................. $  200   │
+│ ───────────────────────────────────────────────  │
+│                          SUBTOTAL:      $2.600    │
+│                          [ Ver total y descuento ]│
+└─────────────────────────────────────────────────┘
 ```
 
-## 2. Iniciar carga
+## 2. Resumen de la orden (árbol Composite)
 ```
 ┌───────────────────────────────────┐
-│ ← Iniciar carga — Surtidor 1       │
+│ ← Resumen — Orden #OV-001          │
 ├───────────────────────────────────┤
-│ Patente:   [ ABC123        ]       │
-│ Tarifa:    [ Por energía  ▾]       │
-│                                    │
-│           [  Iniciar carga  ]      │
+│ Orden                              │
+│  ├─ Notebook ............ $1.500   │
+│  ├─ Monitor ............. $  900   │
+│  └─ Kit Accesorios                 │
+│      ├─ Mouse ........... $   80   │
+│      └─ Teclado ......... $  120   │
+│ ─────────────────────────────────  │
+│ SUBTOTAL: $2.600                   │
 └───────────────────────────────────┘
 ```
 
-## 3. Ticket de carga (al finalizar)
+## 3. Total y descuento (Strategy) — ticket
 ```
 ┌───────────────────────────────┐
-│        ⚡ Ticket de carga       │
+│        🧾 Ticket de venta       │
 ├───────────────────────────────┤
-│ Surtidor 1 — ABC123            │
-│ Inicio:  26/06/2026 14:05      │
-│ Fin:     26/06/2026 14:50      │
-│ Energía: 28,5 kWh              │
+│ Orden #OV-001                  │
+│ Subtotal:         $ 2.600,00   │
+│ Descuento: [ Porcentaje 10% ▾] │
+│            (Ninguno / % / VIP) │
 │ ─────────────────────────────  │
-│ TOTAL:   $ 12.450,00           │
-│           [  Cerrar  ]         │
+│ TOTAL FINAL:      $ 2.340,00   │
+│            [  Cerrar venta  ]  │
 └───────────────────────────────┘
 ```
 
-## 4. Alta de cargador
-```
-┌───────────────────────────────────┐
-│ ← Alta de cargador                 │
-├───────────────────────────────────┤
-│ Ubicación: [ Surtidor 4     ]      │
-│ Tipo:      [ Rápido DC      ▾]     │
-│            (Rápido DC / Semi AC /  │
-│             Lento)                 │
-│            [  Crear cargador  ]    │
-└───────────────────────────────────┘
-```
-
-## 5. Preferencias (I18N)
+## 4. Preferencias (Observer)
 ```
 ┌───────────────────────────────────┐
 │ ← Preferencias                     │
 ├───────────────────────────────────┤
-│ Formato de fecha:  [ dd/MM/yyyy ▾] │
 │ Formato de moneda: [ ARS ($)    ▾] │
+│ Formato de fecha:  [ dd/MM/yyyy ▾] │
 │                                    │
 │ Vista previa:                      │
-│   Fecha:  26/06/2026               │
-│   Monto:  $ 12.450,00              │
+│   Monto:  $ 2.340,00               │
+│   Fecha:  27/06/2026               │
 │            [  Guardar  ]           │
 └───────────────────────────────────┘
 ```

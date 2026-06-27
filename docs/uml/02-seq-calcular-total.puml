@@ -1,0 +1,24 @@
+@startuml VentaSimple-Seq-CalcularTotal
+title Crear Orden y Calcular Total (Composite + Singleton)
+actor Vendedor
+participant ":PuntoDeVenta" as PV
+participant "orden:OrdenVenta" as O
+participant "item:ItemRubroSimple" as I
+participant "kit:ItemCompuesto" as K
+participant "parte:ItemRubroSimple" as P
+
+Vendedor -> PV : getInstancia()
+PV --> Vendedor : instancia
+Vendedor -> O : add(item)
+Vendedor -> O : add(kit)
+Vendedor -> PV : registrarOrden(orden)
+
+Vendedor -> O : calcularTotal()
+O -> I : calcularTotal()
+I --> O : precioItem
+O -> K : calcularTotal()
+K -> P : calcularTotal()
+P --> K : precioParte
+K --> O : subtotalKit
+O --> Vendedor : total
+@enduml

@@ -1,79 +1,76 @@
-@startuml EcoCarga-Clases
-title EcoCarga - Diagrama de Clases con Patrones GOF
+@startuml VentaSimple-Clases
+title VentaSimple - Diagrama de Clases con Patrones GOF
 skinparam classAttributeIconSize 0
 
 ' ===================== SINGLETON =====================
-class EstacionDeCarga <<Singleton>> {
-  - {static} instancia : EstacionDeCarga
+class PuntoDeVenta <<Singleton>> {
+  - {static} instancia : PuntoDeVenta
   - nombre : String
-  - cargadores : List<Cargador>
-  - sesiones : List<SesionDeCarga>
-  - EstacionDeCarga(nombre : String)
-  + {static} getInstancia() : EstacionDeCarga
-  + agregarCargador(c : Cargador) : void
-  + iniciarSesion(cargadorId : int, patente : String, tarifa : EstrategiaDeTarifa) : SesionDeCarga
-  + finalizarSesion(sesionId : int, kwh : double) : SesionDeCarga
-  + listarCargadores() : List<Cargador>
+  - ordenes : List<OrdenVenta>
+  - config : ConfiguracionI18N
+  - PuntoDeVenta()
+  + {static} getInstancia() : PuntoDeVenta
+  + registrarOrden(o : OrdenVenta) : void
+  + getConfiguracion() : ConfiguracionI18N
 }
 
-' ===================== FACTORY METHOD =====================
-abstract class Cargador {
-  - id : int
-  - ubicacion : String
-  - potenciaKw : double
-  - estado : EstadoCargador
-  + getEstado() : EstadoCargador
-  + ocupar() : void
-  + liberar() : void
-  + {abstract} tipoConector() : String
+' ===================== COMPOSITE =====================
+interface ItemVenta <<Component>> {
+  + calcularTotal() : double
+  + getDescripcion() : String
 }
-class CargadorRapidoDC
-class CargadorSemiRapidoAC
-class CargadorLento
-Cargador <|-- CargadorRapidoDC
-Cargador <|-- CargadorSemiRapidoAC
-Cargador <|-- CargadorLento
-
-enum EstadoCargador {
-  LIBRE
-  OCUPADO
-  FUERA_DE_SERVICIO
+class OrdenVenta <<Composite>> {
+  - numero : String
+  - items : List<ItemVenta>
+  - descuento : EstrategiaDescuento
+  + add(i : ItemVenta) : void
+  + calcularTotal() : double
+  + calcularTotalFinal() : double
+  + getDescripcion() : String
 }
-
-abstract class FabricaDeCargadores <<Creator>> {
-  + crearCargador(ubicacion : String) : Cargador
-  + {abstract} factoryMethod() : Cargador
+class ItemCompuesto <<Composite>> {
+  - descripcion : String
+  - partes : List<ItemVenta>
+  + add(i : ItemVenta) : void
+  + remove(i : ItemVenta) : void
+  + calcularTotal() : double
+  + getDescripcion() : String
 }
-class FabricaRapidoDC
-class FabricaSemiRapidoAC
-class FabricaLento
-FabricaDeCargadores <|-- FabricaRapidoDC
-FabricaDeCargadores <|-- FabricaSemiRapidoAC
-FabricaDeCargadores <|-- FabricaLento
+class ItemRubroSimple <<Leaf>> {
+  - nombre : String
+  - descuento : double
+  + calcularTotal() : double
+  + getDescripcion() : String
+}
+class PrecioProducto {
+  - valor : double
+  + getPrecio() : double
+}
+class Seguro {
+  - prima : double
+  + calcularPrima() : double
+}
+ItemVenta <|.. OrdenVenta
+ItemVenta <|.. ItemCompuesto
+ItemVenta <|.. ItemRubroSimple
+OrdenVenta o-- "0..*" ItemVenta
+ItemCompuesto o-- "0..*" ItemVenta
+ItemRubroSimple --> PrecioProducto
+ItemRubroSimple --> Seguro
 
 ' ===================== STRATEGY =====================
-interface EstrategiaDeTarifa <<Strategy>> {
-  + calcularCosto(s : SesionDeCarga) : double
+interface EstrategiaDescuento <<Strategy>> {
+  + aplicar(subtotal : double) : double
 }
-class TarifaPorEnergia
-class TarifaPorTiempo
-class TarifaNocturna
-class TarifaSocio
-EstrategiaDeTarifa <|.. TarifaPorEnergia
-EstrategiaDeTarifa <|.. TarifaPorTiempo
-EstrategiaDeTarifa <|.. TarifaNocturna
-EstrategiaDeTarifa <|.. TarifaSocio
-
-class SesionDeCarga {
-  - id : int
-  - patente : String
-  - fechaInicio : LocalDateTime
-  - fechaFin : LocalDateTime
-  - energiaKwh : double
-  - costo : double
-  + finalizar(kwh : double) : void
-  + calcularCosto() : double
+class SinDescuento
+class DescuentoPorcentaje {
+  - porcentaje : double
 }
+class DescuentoVIP
+EstrategiaDescuento <|.. SinDescuento
+EstrategiaDescuento <|.. DescuentoPorcentaje
+EstrategiaDescuento <|.. DescuentoVIP
+OrdenVenta --> EstrategiaDescuento : usa
 
 ' ===================== OBSERVER =====================
 interface IObservable <<Subject>> {
@@ -85,33 +82,28 @@ interface IObserver {
   + actualizar() : void
 }
 class ConfiguracionI18N {
-  - formatoFecha : String
   - formatoMoneda : String
+  - formatoFecha : String
   - observers : List<IObserver>
-  + setConfiguracion(fecha : String, moneda : String) : void
-  + getFormatoFecha() : String
+  + setConfiguracion(moneda : String, fecha : String) : void
   + getFormatoMoneda() : String
+  + getFormatoFecha() : String
+}
+class FormatoMoneda {
+  - formatoActual : String
+  + actualizar() : void
+  + mostrarMonto(monto : double) : String
 }
 class FormatoFecha {
   - formatoActual : String
   + actualizar() : void
   + mostrarFecha() : String
 }
-class FormatoMoneda {
-  - formatoActual : String
-  + actualizar() : void
-  + mostrarMoneda() : String
-}
 IObservable <|.. ConfiguracionI18N
-IObserver <|.. FormatoFecha
 IObserver <|.. FormatoMoneda
+IObserver <|.. FormatoFecha
 
-' ===================== RELACIONES =====================
-EstacionDeCarga "1" o-- "0..*" Cargador
-EstacionDeCarga "1" o-- "0..*" SesionDeCarga
-SesionDeCarga "1" --> "1" Cargador
-SesionDeCarga "1" --> "1" EstrategiaDeTarifa : usa
-FabricaDeCargadores ..> Cargador : crea
-Cargador --> EstadoCargador
-ConfiguracionI18N "1" o-- "0..*" IObserver
+' ===================== RELACIONES GLOBALES =====================
+PuntoDeVenta o-- "0..*" OrdenVenta
+PuntoDeVenta *-- ConfiguracionI18N
 @enduml

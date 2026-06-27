@@ -1,139 +1,130 @@
-# Solución con Patrones de Diseño GOF — EcoCarga
+# Solución con Patrones de Diseño GOF — VentaSimple
 
-Módulo: **gestión de una estación de carga de autos eléctricos**. Se aplican cuatro patrones de
-diseño GOF en el backend. Para cada uno se documentan los seis puntos pedidos: nombre, propósito,
-motivación, estructura, participantes y colaboración.
+Módulo: **punto de venta / orden de venta**. Se aplican cuatro patrones de diseño GOF en el backend.
+Para cada uno se documentan los seis puntos: nombre, propósito, motivación, estructura, participantes y
+colaboración.
 
-> Diagrama de clases general: `docs/uml/01-clases.puml` → `EcoCarga-Clases.png`.
-
----
-
-## Patrón 1 — Singleton
-
-**1. Nombre del Patrón:** Singleton (patrón creacional).
-
-**2. Propósito:** garantizar que la clase `EstacionDeCarga` tenga una única instancia y proveer un
-punto de acceso global a ella.
-
-**3. Motivación:** en el mundo real existe una sola estación de carga. Si el sistema permitiera crear
-varias instancias de `EstacionDeCarga`, cada una tendría su propia lista de cargadores y de sesiones,
-generando estados inconsistentes (un cargador "ocupado" en una instancia y "libre" en otra). Aplicando
-Singleton, cualquier módulo que necesite la estación obtiene siempre el mismo objeto y el estado es
-consistente en todo el sistema.
-
-**4. Estructura:** ver `docs/uml/01-clases.puml`. `EstacionDeCarga` con atributo estático `instancia`,
-constructor privado y método estático `getInstancia()`.
-
-**5. Participantes:**
-- `EstacionDeCarga` (Singleton): atributo estático privado `instancia`; constructor privado que impide
-  la instanciación externa; método estático `getInstancia()` que crea la instancia la primera vez y la
-  retorna en las siguientes llamadas. Mantiene el nombre, la lista de cargadores y la lista de sesiones.
-
-**6. Colaboración:** los servicios (`CargadorService`, `SesionService`) nunca instancian la estación
-directamente, sino que acceden mediante `EstacionDeCarga.getInstancia()`. La primera llamada ejecuta el
-constructor privado; las siguientes retornan la instancia existente. La implementación usa
-*double-checked locking* con `synchronized` para ser segura en entornos multihilo.
+> Diagrama de clases general: `docs/uml/01-clases.puml` → `VentaSimple-Clases.png`.
 
 ---
 
-## Patrón 2 — Factory Method
+## Patrón 1 — Composite
 
-**1. Nombre del Patrón:** Factory Method (patrón creacional).
+**1. Nombre del Patrón:** Composite (Compuesto) — patrón estructural GOF.
 
-**2. Propósito:** definir una interfaz para crear un objeto `Cargador`, delegando en las subclases la
-decisión de qué tipo concreto instanciar.
+**2. Propósito:** componer objetos en estructuras de árbol para representar jerarquías parte-todo.
+Permite que el cliente trate de manera uniforme tanto objetos individuales como composiciones, usando
+la misma interfaz para ambos.
 
-**3. Motivación:** la estación maneja distintos tipos de cargador (`CargadorRapidoDC`,
-`CargadorSemiRapidoAC`, `CargadorLento`), cada uno con su potencia y tipo de conector. El código que da
-de alta un cargador no debería conocer las clases concretas ni llenarse de `if/switch`. Con Factory
-Method, agregar un tipo nuevo de cargador solo requiere una nueva fábrica concreta, sin tocar el código
-cliente (principio abierto/cerrado).
+**3. Motivación:** un vendedor necesita calcular el total de una orden que puede contener ítems simples
+(un producto con precio fijo, seguro opcional y descuento) y también ítems compuestos (kits que agrupan
+productos y que a su vez pueden contener sub-ítems). El código del vendedor calcula el total sin saber
+si trata con un ítem simple o con un conjunto anidado. El Composite define la interfaz común `ItemVenta`
+con `calcularTotal()`; cada nodo delega recursivamente en sus hijos.
 
-**4. Estructura:** ver `docs/uml/01-clases.puml` (jerarquías `Cargador` y `FabricaDeCargadores`) y la
-secuencia `docs/uml/02-seq-alta-cargador.puml` → `EcoCarga-Seq-AltaCargador.png`.
+**4. Estructura:** ver `docs/uml/01-clases.puml` y la secuencia `docs/uml/02-seq-calcular-total.puml`
+→ `VentaSimple-Seq-CalcularTotal.png`.
 
 **5. Participantes:**
-- `Cargador` (Product, abstracto) y sus subtipos `CargadorRapidoDC`, `CargadorSemiRapidoAC`,
-  `CargadorLento` (ConcreteProduct).
-- `FabricaDeCargadores` (Creator, abstracto): define `crearCargador(ubicacion)` y el método fábrica
-  abstracto `factoryMethod()`.
-- `FabricaRapidoDC`, `FabricaSemiRapidoAC`, `FabricaLento` (ConcreteCreator): implementan
-  `factoryMethod()` devolviendo el subtipo correspondiente.
 
-**6. Colaboración:** al dar de alta un cargador, `CargadorService` invoca `crearCargador(ubicacion)`
-sobre la fábrica concreta elegida; ésta llama internamente a `factoryMethod()` para construir el
-`Cargador` del tipo adecuado y lo devuelve. Luego el cargador se agrega a la estación (Singleton).
+| Rol Composite | Clase | Responsabilidad |
+|---------------|-------|-----------------|
+| Component | `ItemVenta` (interfaz) | Declara `calcularTotal()` y `getDescripcion()` |
+| Composite (raíz) | `OrdenVenta` | Contiene lista de `ItemVenta`; `calcularTotal()` itera y suma |
+| Composite | `ItemCompuesto` | Agrupación interna (kit); delega `calcularTotal()` a sus partes |
+| Leaf | `ItemRubroSimple` | Calcula su precio usando `PrecioProducto`, `Seguro` y descuento |
+| Helper | `PrecioProducto` | Encapsula el valor monetario del ítem |
+| Helper | `Seguro` | Calcula la prima adicional sobre el ítem |
+| Client | `Vendedor` / `OrdenService` | Crea la orden, agrega ítems y llama `calcularTotal()` |
+
+**6. Colaboración:** el vendedor agrega ítems simples y compuestos a la orden y llama `calcularTotal()`.
+`OrdenVenta` itera su lista; cada `ItemRubroSimple` retorna su precio y cada `ItemCompuesto` suma
+recursivamente sus partes. El total acumulado vuelve al vendedor.
+
+**Origen:** reutiliza el TP10 (diagrama de clases ya validado por el equipo).
 
 ---
 
-## Patrón 3 — Strategy
+## Patrón 2 — Singleton
 
-**1. Nombre del Patrón:** Strategy (patrón de comportamiento).
+**1. Nombre del Patrón:** Singleton — patrón creacional GOF.
 
-**2. Propósito:** definir una familia de algoritmos de tarifa, encapsular cada uno y hacerlos
-intercambiables, permitiendo que el cálculo del costo varíe independientemente de la sesión.
+**2. Propósito:** garantizar que `PuntoDeVenta` tenga una única instancia y proveer un punto de acceso
+global.
 
-**3. Motivación:** el costo de una carga puede calcularse de varias formas: por energía consumida
-(kWh), por tiempo, con tarifa nocturna o con tarifa preferencial de socio. Codificar todas estas
-variantes con condicionales dentro de `SesionDeCarga` la volvería rígida y difícil de mantener. Con
-Strategy, cada política de tarifa es una clase propia y se puede cambiar en tiempo de ejecución.
+**3. Motivación:** existe una sola caja / sistema de venta. Si hubiera varias instancias, cada una
+tendría su propia lista de órdenes y su propia configuración, generando estados inconsistentes. Con
+Singleton, cualquier módulo obtiene siempre el mismo `PuntoDeVenta`.
 
-**4. Estructura:** ver `docs/uml/01-clases.puml` (interfaz `EstrategiaDeTarifa` y sus implementaciones)
-y la secuencia `docs/uml/03-seq-finalizar-carga.puml` → `EcoCarga-Seq-FinalizarCarga.png`.
+**4. Estructura:** ver `docs/uml/01-clases.puml` (clase `PuntoDeVenta`).
 
 **5. Participantes:**
-- `EstrategiaDeTarifa` (Strategy, interfaz): declara `calcularCosto(SesionDeCarga)`.
-- `TarifaPorEnergia`, `TarifaPorTiempo`, `TarifaNocturna`, `TarifaSocio` (ConcreteStrategy):
-  implementan cada algoritmo de cálculo.
-- `SesionDeCarga` (Context): mantiene una referencia a una `EstrategiaDeTarifa` y delega en ella el
-  cálculo del costo.
+- `PuntoDeVenta` (Singleton): atributo estático privado `instancia`; constructor privado;
+  método estático `getInstancia()`. Mantiene el nombre, la lista de órdenes y la `ConfiguracionI18N`.
 
-**6. Colaboración:** al iniciarse, la sesión recibe la estrategia de tarifa elegida. Al finalizar la
-carga, `SesionDeCarga.calcularCosto()` delega en `tarifa.calcularCosto(this)`, que aplica el algoritmo
-concreto y devuelve el costo. La sesión no conoce los detalles del cálculo.
+**6. Colaboración:** los servicios acceden con `PuntoDeVenta.getInstancia()`. La primera llamada crea
+la instancia; las siguientes la retornan. Implementación thread-safe con double-checked locking.
+
+**Origen:** reutiliza el TP6 (InstitutoEducativo → PuntoDeVenta).
 
 ---
 
-## Patrón 4 — Observer
+## Patrón 3 — Observer
 
-**1. Nombre del Patrón:** Observer (patrón de comportamiento). También conocido como
-Publish-Subscribe / Dependents.
+**1. Nombre del Patrón:** Observer — patrón de comportamiento GOF (Publish-Subscribe).
 
-**2. Propósito:** definir una dependencia uno-a-muchos entre objetos, de modo que cuando
-`ConfiguracionI18N` cambia de estado, todos sus dependientes son notificados y actualizados
-automáticamente.
+**2. Propósito:** definir una dependencia uno-a-muchos: cuando `ConfiguracionI18N` cambia, todos sus
+dependientes son notificados y actualizados automáticamente.
 
-**3. Motivación:** el formato de fecha y de moneda se usa en muchas vistas (tickets, tablero). Cuando
-el operador cambia estas preferencias, todas las partes que muestran fechas o montos deben reflejar el
-nuevo formato. Sin un mecanismo de notificación, cada vista tendría que consultar periódicamente la
-configuración (polling), generando acoplamiento y posibles inconsistencias. Observer invierte la
-responsabilidad: la configuración notifica a los interesados en el momento del cambio.
+**3. Motivación:** el total de la orden se muestra en distintas vistas con un formato de moneda (y de
+fecha). Cuando el usuario cambia el formato, todas las vistas deben reflejarlo sin polling ni
+acoplamiento directo.
 
-**4. Estructura:** ver `docs/uml/01-clases.puml` (interfaces `IObservable`/`IObserver` y clases
-`ConfiguracionI18N`, `FormatoFecha`, `FormatoMoneda`) y la secuencia
-`docs/uml/04-seq-configuracion.puml` → `EcoCarga-Seq-Configuracion.png`.
+**4. Estructura:** ver `docs/uml/01-clases.puml` y la secuencia `docs/uml/04-seq-configuracion.puml`
+→ `VentaSimple-Seq-Configuracion.png`.
 
 **5. Participantes:**
-- `IObservable` (Subject, interfaz): `addObserver()`, `removeObserver()`, `notificar()`.
-- `IObserver` (Observer, interfaz): `actualizar()`.
-- `ConfiguracionI18N` (ConcreteSubject): almacena `formatoFecha`, `formatoMoneda` y la lista de
-  observadores; al cambiar su estado invoca `notificar()`. Expone `getFormatoFecha()` y
-  `getFormatoMoneda()` (modelo pull).
-- `FormatoFecha`, `FormatoMoneda` (ConcreteObserver): implementan `actualizar()` consultando el nuevo
-  valor al Subject.
+- `IObservable` (Subject): `addObserver()`, `removeObserver()`, `notificar()`.
+- `IObserver` (Observer): `actualizar()`.
+- `ConfiguracionI18N` (ConcreteSubject): almacena `formatoMoneda`, `formatoFecha` y la lista de
+  observadores; al cambiar invoca `notificar()`. Expone `getFormatoMoneda()` y `getFormatoFecha()`.
+- `FormatoMoneda`, `FormatoFecha` (ConcreteObserver): en `actualizar()` consultan el nuevo valor.
 
-**6. Colaboración:** `setConfiguracion(fecha, moneda)` actualiza el estado y llama a `notificar()`,
-que recorre la lista de observadores invocando `actualizar()` en cada uno. Cada observador, en su
-`actualizar()`, consulta el valor actual al Subject (modelo pull) y refresca su representación.
+**6. Colaboración:** `setConfiguracion(moneda, fecha)` actualiza el estado y llama `notificar()`, que
+recorre los observadores invocando `actualizar()` en cada uno (modelo pull).
 
-> **Nota de implementación:** se usa `notificar()` (Subject) y `actualizar()` (Observer) en lugar de
-> `notify()`, porque `Object.notify()` es `final` en Java y no puede sobrescribirse. Es una mejora
-> respecto del ejemplo original del TP11.
+**Origen:** reutiliza el TP11. *Nota:* se usa `notificar()`/`actualizar()` en lugar de `notify()`,
+porque `Object.notify()` es `final` en Java y no puede sobrescribirse.
+
+---
+
+## Patrón 4 — Strategy *(patrón nuevo)*
+
+**1. Nombre del Patrón:** Strategy — patrón de comportamiento GOF.
+
+**2. Propósito:** definir una familia de algoritmos de descuento, encapsular cada uno y hacerlos
+intercambiables, de modo que el descuento varíe independientemente de la orden.
+
+**3. Motivación:** el total de una orden puede tener distintos descuentos: ninguno, un porcentaje fijo,
+o un descuento de cliente VIP. Codificar estas variantes con condicionales dentro de `OrdenVenta` la
+volvería rígida. Con Strategy, cada política es una clase propia e intercambiable en tiempo de ejecución.
+
+**4. Estructura:** ver `docs/uml/01-clases.puml` (interfaz `EstrategiaDescuento` y sus implementaciones)
+y la secuencia `docs/uml/03-seq-descuento.puml` → `VentaSimple-Seq-Descuento.png`.
+
+**5. Participantes:**
+- `EstrategiaDescuento` (Strategy, interfaz): declara `aplicar(subtotal) : double`.
+- `SinDescuento`, `DescuentoPorcentaje`, `DescuentoVIP` (ConcreteStrategy).
+- `OrdenVenta` (Context): mantiene una `EstrategiaDescuento` y delega en ella el descuento.
+
+**6. Colaboración:** `OrdenVenta.calcularTotalFinal()` obtiene el subtotal con el Composite
+(`calcularTotal()`) y delega en `estrategiaDescuento.aplicar(subtotal)`, que aplica el algoritmo
+concreto. **Esto extiende el Composite del TP10 sin modificarlo.**
 
 ---
 
 ## Patrones relacionados
-- **Singleton + Observer:** `ConfiguracionI18N` podría a su vez ser Singleton para garantizar una única
-  configuración global.
-- **Strategy + Factory Method:** ambos desacoplan al cliente de las clases concretas; Factory Method
-  crea objetos, Strategy intercambia algoritmos.
+- **Composite + Strategy:** el Composite calcula el subtotal del árbol y Strategy decide el descuento
+  sobre ese subtotal; se combinan sin acoplarse.
+- **Singleton + Observer:** la configuración vive dentro del único `PuntoDeVenta`, garantizando una sola
+  fuente de preferencias global.

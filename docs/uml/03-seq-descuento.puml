@@ -1,0 +1,13 @@
+@startuml VentaSimple-Seq-Descuento
+title Aplicar Descuento al Total (Strategy)
+actor Vendedor
+participant "orden:OrdenVenta" as O
+participant "desc:DescuentoPorcentaje" as D
+
+Vendedor -> O : calcularTotalFinal()
+O -> O : calcularTotal()
+note right of O: subtotal del Composite (sin descuento)
+O -> D : aplicar(subtotal)
+D --> O : totalConDescuento
+O --> Vendedor : totalConDescuento
+@enduml

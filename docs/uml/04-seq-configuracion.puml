@@ -1,17 +1,17 @@
-@startuml EcoCarga-Seq-Configuracion
-title Cambiar Configuracion I18N (Observer)
-actor Operador
+@startuml VentaSimple-Seq-Configuracion
+title Cambiar Formato de Moneda (Observer)
+actor Vendedor
 participant "config:ConfiguracionI18N" as Cfg
-participant "fecha:FormatoFecha" as FF
 participant "moneda:FormatoMoneda" as FM
+participant "fecha:FormatoFecha" as FF
 
-Operador -> Cfg : setConfiguracion("dd/MM/yyyy", "ARS")
+Vendedor -> Cfg : setConfiguracion("ARS", "dd/MM/yyyy")
 Cfg -> Cfg : notificar()
-Cfg -> FF : actualizar()
-FF -> Cfg : getFormatoFecha()
-Cfg --> FF : "dd/MM/yyyy"
 Cfg -> FM : actualizar()
 FM -> Cfg : getFormatoMoneda()
 Cfg --> FM : "ARS"
-Cfg --> Operador : configuracion aplicada
+Cfg -> FF : actualizar()
+FF -> Cfg : getFormatoFecha()
+Cfg --> FF : "dd/MM/yyyy"
+Cfg --> Vendedor : configuracion aplicada
 @enduml
