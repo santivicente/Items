@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VentaSimple — Preferencias</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>🛒 VentaSimple</h1>
+    <nav>
+        <a th:href="@{/}">Armar orden</a>
+        <a th:href="@{/resumen}">Resumen</a>
+        <a th:href="@{/total}">Total y descuento</a>
+        <a th:href="@{/preferencias}">Preferencias</a>
+    </nav>
+</header>
+
+<main>
+    <div class="card">
+        <h2>⚙ Preferencias de formato</h2>
+        <form th:action="@{/preferencias}" method="post">
+            <label for="moneda">Formato de moneda</label>
+            <select id="moneda" name="moneda">
+                <option value="ARS" th:selected="${moneda == 'ARS'}">ARS ($)</option>
+                <option value="USD" th:selected="${moneda == 'USD'}">USD (US$)</option>
+            </select>
+
+            <label for="fecha">Formato de fecha</label>
+            <select id="fecha" name="fecha">
+                <option value="dd/MM/yyyy" th:selected="${fecha == 'dd/MM/yyyy'}">dd/MM/yyyy</option>
+                <option value="yyyy-MM-dd" th:selected="${fecha == 'yyyy-MM-dd'}">yyyy-MM-dd</option>
+                <option value="MM/dd/yyyy" th:selected="${fecha == 'MM/dd/yyyy'}">MM/dd/yyyy</option>
+            </select>
+
+            <button type="submit">Guardar</button>
+        </form>
+
+        <div class="preview">
+            <strong>Vista previa</strong>
+            <div class="total-row"><span>Monto</span><span th:text="${previewMonto}">$ 0</span></div>
+            <div class="total-row"><span>Fecha</span><span th:text="${previewFecha}">--</span></div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

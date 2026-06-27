@@ -1,0 +1,122 @@
+:root {
+    --azul: #1565c0;
+    --azul-osc: #0d3c75;
+    --gris: #f4f6f8;
+    --texto: #1c2330;
+    --borde: #d7dde5;
+    --verde: #2e7d32;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", system-ui, Arial, sans-serif;
+    margin: 0;
+    background: var(--gris);
+    color: var(--texto);
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+header {
+    background: var(--azul);
+    color: #fff;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+header h1 { font-size: 20px; margin: 0; }
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 14px;
+    font-weight: 600;
+    opacity: 0.92;
+}
+nav a:hover { text-decoration: underline; opacity: 1; }
+
+main {
+    max-width: 760px;
+    margin: 24px auto;
+    padding: 0 16px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 { margin-top: 0; font-size: 19px; }
+
+label { display: block; font-weight: 600; margin: 10px 0 4px; }
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+}
+
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > div { flex: 1; min-width: 140px; }
+
+button, .btn {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--azul);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+button:hover, .btn:hover { background: var(--azul-osc); }
+
+.btn-sec {
+    background: #fff;
+    color: var(--azul);
+    border: 2px solid var(--azul);
+}
+
+ul.items { list-style: none; padding: 0; }
+ul.items li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--borde);
+}
+ul.arbol { margin: 6px 0 6px 18px; }
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    padding: 10px 0;
+}
+.total-final {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--verde);
+    border-top: 2px solid var(--borde);
+    padding-top: 12px;
+    margin-top: 8px;
+}
+
+.preview {
+    background: var(--gris);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 10px;
+}
+.acciones { display: flex; gap: 12px; flex-wrap: wrap; }

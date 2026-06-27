@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VentaSimple — Total y descuento</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header>
+    <h1>🛒 VentaSimple</h1>
+    <nav>
+        <a th:href="@{/}">Armar orden</a>
+        <a th:href="@{/resumen}">Resumen</a>
+        <a th:href="@{/total}">Total y descuento</a>
+        <a th:href="@{/preferencias}">Preferencias</a>
+    </nav>
+</header>
+
+<main>
+    <div class="card">
+        <h2>🧾 Ticket — <span th:text="${orden.getDescripcion()}">Orden</span></h2>
+
+        <div class="total-row">
+            <span>Subtotal</span>
+            <span th:text="${fmt.mostrarMonto(subtotal)}">$0</span>
+        </div>
+
+        <form th:action="@{/total}" method="post">
+            <label for="tipo">Descuento</label>
+            <select id="tipo" name="tipo" onchange="this.form.submit()">
+                <option value="sin">Sin descuento</option>
+                <option value="porcentaje">Descuento 10%</option>
+                <option value="vip">Cliente VIP (15%)</option>
+            </select>
+            <noscript><button type="submit">Aplicar</button></noscript>
+        </form>
+
+        <div class="total-row">
+            <span>Descuento aplicado</span>
+            <span th:text="${descuentoNombre}">Sin descuento</span>
+        </div>
+
+        <div class="total-row total-final">
+            <span>TOTAL FINAL</span>
+            <span th:text="${fmt.mostrarMonto(totalFinal)}">$0</span>
+        </div>
+
+        <a class="btn" th:href="@{/}">Volver a la orden</a>
+    </div>
+</main>
+</body>
+</html>

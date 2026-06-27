@@ -183,19 +183,20 @@ domain/
 repository/   → en memoria / H2
 ```
 
-### Frontend (React + Vite)
+### Frontend (Thymeleaf — todo en el mismo proyecto Spring Boot)
+> Decisión 2026-06-27: el frontend se hace con **Thymeleaf** (HTML renderizado por Spring Boot),
+> sin React. Todo es un único proyecto Gradle.
 ```
-src/
-  pages/      → ArmarOrden, ResumenOrden, TotalDescuento, Preferencias
-  components/ → ProductoCard, ItemArbol, TicketTotal
-  api/        → cliente HTTP
+src/main/resources/templates/   → armar-orden.html, resumen.html, ticket.html, preferencias.html
+src/main/resources/static/css/  → styles.css
 ```
 
-### Endpoints REST (borrador)
-- `POST /api/ordenes` — crear orden.
-- `POST /api/ordenes/{id}/items` — agregar ítem simple o compuesto.
-- `GET  /api/ordenes/{id}/total` — total (Composite) y total final con descuento (Strategy).
-- `GET/PUT /api/configuracion` — formato moneda/fecha (Observer).
+### Rutas (controladores MVC con Thymeleaf)
+- `GET  /` — armar orden (home).
+- `POST /ordenes/items` — agregar ítem simple o kit.
+- `GET  /ordenes/resumen` — resumen (árbol Composite).
+- `GET/POST /ordenes/total` — total con descuento (Strategy).
+- `GET/POST /preferencias` — formato moneda/fecha (Observer).
 
 ---
 
