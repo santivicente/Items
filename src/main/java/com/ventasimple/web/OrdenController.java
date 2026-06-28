@@ -83,6 +83,7 @@ public class OrdenController {
         model.addAttribute("totalFinal", orden.calcularTotalFinal());
         model.addAttribute("descuentoNombre", orden.getDescuento().getNombre());
         model.addAttribute("tipoDescuento", tipoDescuentoActual(orden));
+        model.addAttribute("fechaVenta", pdv.getFormatoFecha().mostrarFecha(java.time.LocalDate.now()));
     }
 
     /** Mapea la estrategia actual a la clave del desplegable, para marcar la opción elegida. */

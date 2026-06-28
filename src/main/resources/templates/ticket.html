@@ -14,6 +14,11 @@
         <h2>🧾 Ticket — <span th:text="${orden.getDescripcion()}">Orden</span></h2>
 
         <div class="total-row">
+            <span>Fecha</span>
+            <span th:text="${fechaVenta}">--</span>
+        </div>
+
+        <div class="total-row">
             <span>Subtotal</span>
             <span th:text="${fmt.mostrarMonto(subtotal)}">$0</span>
         </div>
