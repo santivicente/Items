@@ -7,17 +7,18 @@
 - **Necesidades de diseño:** subtotal/total siempre visibles, botones grandes, flujo corto.
 
 ## Tareas principales (análisis Top-Down)
-1. Agregar productos sueltos a la orden.
-2. Armar kits (ítems compuestos) agrupando productos.
-3. Ver el subtotal de la orden (vista del árbol Composite).
-4. Elegir una estrategia de descuento y ver el total final.
-5. Ajustar preferencias de formato (moneda / fecha).
+1. Agregar productos a la orden desde el catálogo predefinido.
+2. Armar kits (ítems compuestos) agrupando productos del catálogo (cualquier cantidad).
+3. Ver la orden como árbol con su subtotal (vista del Composite, en la misma pantalla).
+4. Elegir una estrategia de descuento, ver el total final y cerrar la venta.
+5. Consultar el historial de ventas emitidas.
+6. Ajustar preferencias de formato (moneda / fecha).
 
 ## Arquitectura de la información / Mapa de navegación
 ```
-Armar orden (home)
- ├─ Resumen de la orden
- ├─ Total y descuento ──────► Ticket
+Armar orden (home: catálogo + kits + orden en árbol)
+ ├─ Total y descuento ──────► Ticket ──► Cerrar venta
+ ├─ Ventas emitidas (historial)
  └─ Preferencias (moneda/fecha)
 ```
 Navegación plana (1 nivel) desde "Armar orden", para minimizar la carga cognitiva.

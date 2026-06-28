@@ -102,7 +102,29 @@ button:hover, .btn:hover { background: var(--azul-osc); }
     border: 2px solid var(--azul);
 }
 
+.check-grid {
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+}
+.check-grid legend { font-weight: 600; padding: 0 6px; }
+label.check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 400;
+    margin: 0;
+    cursor: pointer;
+}
+label.check input { width: auto; }
+
 ul.items { list-style: none; padding: 0; }
+ul.items li form { margin: 0; }
+ul.items li form button { margin: 0; padding: 6px 14px; }
 ul.items li {
     display: flex;
     justify-content: space-between;

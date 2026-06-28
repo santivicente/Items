@@ -1,5 +1,6 @@
 package com.ventasimple.web;
 
+import com.ventasimple.domain.Catalogo;
 import com.ventasimple.domain.PuntoDeVenta;
 import com.ventasimple.domain.composite.ItemCompuesto;
 import com.ventasimple.domain.composite.ItemSimple;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 public class OrdenController {
 
@@ -23,23 +26,28 @@ public class OrdenController {
     @GetMapping("/")
     public String armarOrden(Model model) {
         cargarComunes(model);
+        model.addAttribute("catalogo", Catalogo.getProductos());
         return "armar-orden";
     }
 
     @PostMapping("/items/simple")
-    public String agregarSimple(@RequestParam String nombre, @RequestParam double precio) {
-        pdv().getOrdenActual().add(new ItemSimple(nombre, precio));
+    public String agregarSimple(@RequestParam int productoId) {
+        Catalogo.Producto p = Catalogo.porId(productoId);
+        pdv().getOrdenActual().add(new ItemSimple(p.getNombre(), p.getPrecio()));
         return "redirect:/";
     }
 
     @PostMapping("/items/kit")
     public String agregarKit(@RequestParam String kitNombre,
-                             @RequestParam String nombre1, @RequestParam double precio1,
-                             @RequestParam String nombre2, @RequestParam double precio2) {
-        ItemCompuesto kit = new ItemCompuesto(kitNombre);
-        kit.add(new ItemSimple(nombre1, precio1));
-        kit.add(new ItemSimple(nombre2, precio2));
-        pdv().getOrdenActual().add(kit);
+                             @RequestParam(required = false) List<Integer> productoIds) {
+        if (productoIds != null && !productoIds.isEmpty()) {
+            ItemCompuesto kit = new ItemCompuesto(kitNombre);
+            for (Integer id : productoIds) {
+                Catalogo.Producto p = Catalogo.porId(id);
+                kit.add(new ItemSimple(p.getNombre(), p.getPrecio()));
+            }
+            pdv().getOrdenActual().add(kit);
+        }
         return "redirect:/";
     }
 
@@ -47,12 +55,6 @@ public class OrdenController {
     public String nuevaOrden() {
         pdv().nuevaOrden();
         return "redirect:/";
-    }
-
-    @GetMapping("/resumen")
-    public String resumen(Model model) {
-        cargarComunes(model);
-        return "resumen";
     }
 
     @GetMapping("/total")

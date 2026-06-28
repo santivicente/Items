@@ -11,57 +11,52 @@
 
 <main>
     <div class="card">
-        <h2>Agregar producto</h2>
-        <form th:action="@{/items/simple}" method="post">
-            <div class="row">
-                <div>
-                    <label for="nombre">Producto</label>
-                    <input id="nombre" name="nombre" required placeholder="Notebook">
-                </div>
-                <div>
-                    <label for="precio">Precio</label>
-                    <input id="precio" name="precio" type="number" step="0.01" min="0" required placeholder="1500">
-                </div>
-            </div>
-            <button type="submit">Agregar producto</button>
-        </form>
+        <h2>Catálogo de productos</h2>
+        <ul class="items">
+            <li th:each="p : ${catalogo}">
+                <span th:text="${p.getNombre()} + ' — ' + ${fmt.mostrarMonto(p.getPrecio())}">Producto</span>
+                <form th:action="@{/items/simple}" method="post">
+                    <input type="hidden" name="productoId" th:value="${p.getId()}">
+                    <button type="submit">Agregar</button>
+                </form>
+            </li>
+        </ul>
     </div>
 
     <div class="card">
-        <h2>Agregar kit (2 productos)</h2>
+        <h2>Armar un kit</h2>
+        <p>Elegí un nombre y tildá los productos que querés incluir (los que quieras).</p>
         <form th:action="@{/items/kit}" method="post">
             <label for="kitNombre">Nombre del kit</label>
-            <input id="kitNombre" name="kitNombre" required placeholder="Kit Accesorios">
-            <div class="row">
-                <div>
-                    <label for="nombre1">Producto 1</label>
-                    <input id="nombre1" name="nombre1" required placeholder="Mouse">
-                </div>
-                <div>
-                    <label for="precio1">Precio 1</label>
-                    <input id="precio1" name="precio1" type="number" step="0.01" min="0" required placeholder="80">
-                </div>
-            </div>
-            <div class="row">
-                <div>
-                    <label for="nombre2">Producto 2</label>
-                    <input id="nombre2" name="nombre2" required placeholder="Teclado">
-                </div>
-                <div>
-                    <label for="precio2">Precio 2</label>
-                    <input id="precio2" name="precio2" type="number" step="0.01" min="0" required placeholder="120">
-                </div>
-            </div>
-            <button type="submit">Agregar kit</button>
+            <input id="kitNombre" name="kitNombre" required placeholder="Kit Oficina">
+
+            <fieldset class="check-grid">
+                <legend>Productos del kit</legend>
+                <label class="check" th:each="p : ${catalogo}">
+                    <input type="checkbox" name="productoIds" th:value="${p.getId()}">
+                    <span th:text="${p.getNombre()} + ' (' + ${fmt.mostrarMonto(p.getPrecio())} + ')'">Producto</span>
+                </label>
+            </fieldset>
+
+            <button type="submit">Agregar kit a la orden</button>
         </form>
     </div>
 
     <div class="card">
         <h2 th:text="${orden.getDescripcion()}">Orden</h2>
         <ul class="items">
-            <li th:each="item : ${items}">
-                <span th:text="${item.getDescripcion()}">Item</span>
-                <span th:text="${fmt.mostrarMonto(item.calcularTotal())}">$0</span>
+            <li th:each="item : ${items}" style="flex-direction: column; align-items: stretch;">
+                <div style="display:flex; justify-content:space-between;">
+                    <span th:text="${item.getDescripcion()}">Item</span>
+                    <span th:text="${fmt.mostrarMonto(item.calcularTotal())}">$0</span>
+                </div>
+                <ul class="arbol items"
+                    th:if="${item instanceof T(com.ventasimple.domain.composite.ItemCompuesto)}">
+                    <li th:each="parte : ${item.getPartes()}">
+                        <span th:text="'↳ ' + ${parte.getDescripcion()}">Parte</span>
+                        <span th:text="${fmt.mostrarMonto(parte.calcularTotal())}">$0</span>
+                    </li>
+                </ul>
             </li>
             <li th:if="${items.isEmpty()}"><em>La orden está vacía. Agregá productos o kits.</em></li>
         </ul>

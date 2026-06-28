@@ -112,8 +112,8 @@ Así el Composite queda intacto (como el TP10 original) y el descuento es un agr
 
 - **Capas:** `domain/` (los 4 patrones) → `web/` (controladores Spring MVC) → `templates/` (Thymeleaf).
 - **Cómo correr:** `gradlew.bat bootRun` y abrir `http://localhost:8080`. Tests: `gradlew.bat test`.
-- **Pantallas (5):** Armar orden, Resumen (árbol), Total y descuento (ticket + cerrar venta),
-  Ventas emitidas (historial), Preferencias (i18n).
+- **Pantallas (4):** Armar orden (catálogo + kits + orden en árbol), Total y descuento (ticket +
+  cerrar venta), Ventas emitidas (historial), Preferencias (i18n).
 
 ---
 

@@ -46,13 +46,13 @@ Necesidad central: agregar productos y kits rápido, ver el total claro y aplica
 **Metáfora central:** el **carrito de compras + ticket de caja**. Se "cargan productos al carrito",
 se "agrupan en combos/kits", y al final sale el "ticket" con el total y el descuento.
 
-### Alcance del MVP (5 pantallas)
+### Alcance del MVP (4 pantallas)
 
-1. **Armar orden** — buscar/agregar productos sueltos y crear kits (ítems compuestos).
-2. **Resumen de la orden** — lista de ítems con subtotal (vista del árbol Composite).
-3. **Total y descuento** — elegir estrategia de descuento, ver el total final y **cerrar la venta**.
-4. **Ventas emitidas** — historial de ventas cerradas (registro guardado en el Singleton).
-5. **Preferencias** — formato de moneda y fecha (Observer).
+1. **Armar orden** — agregar productos desde un **catálogo predefinido** y armar **kits** con cualquier
+   cantidad de productos (checkboxes). Muestra la orden como árbol (kits expandidos) con su subtotal.
+2. **Total y descuento** — elegir estrategia de descuento, ver el total final y **cerrar la venta**.
+3. **Ventas emitidas** — historial de ventas cerradas (registro guardado en el Singleton).
+4. **Preferencias** — formato de moneda y fecha (Observer).
 
 ### Fuera de alcance (YAGNI)
 
@@ -191,7 +191,7 @@ repository/   → en memoria / H2
 > Decisión 2026-06-27: el frontend se hace con **Thymeleaf** (HTML renderizado por Spring Boot),
 > sin React. Todo es un único proyecto Gradle.
 ```
-src/main/resources/templates/   → armar-orden.html, resumen.html, ticket.html, preferencias.html
+src/main/resources/templates/   → armar-orden.html, ticket.html, ventas.html, preferencias.html, fragments.html
 src/main/resources/static/css/  → styles.css
 ```
 

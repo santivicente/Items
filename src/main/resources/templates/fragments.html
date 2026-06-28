@@ -6,8 +6,6 @@
     <nav>
         <a th:href="@{/}" th:classappend="${activo == 'orden'} ? 'activo'"
            th:attr="aria-current=${activo == 'orden'} ? 'page'">Armar orden</a>
-        <a th:href="@{/resumen}" th:classappend="${activo == 'resumen'} ? 'activo'"
-           th:attr="aria-current=${activo == 'resumen'} ? 'page'">Resumen</a>
         <a th:href="@{/total}" th:classappend="${activo == 'total'} ? 'activo'"
            th:attr="aria-current=${activo == 'total'} ? 'page'">Total y descuento</a>
         <a th:href="@{/ventas}" th:classappend="${activo == 'ventas'} ? 'activo'"
