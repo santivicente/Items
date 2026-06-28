@@ -1,5 +1,7 @@
 package com.ventasimple.domain;
 
+import com.ventasimple.domain.composite.ItemCompuesto;
+import com.ventasimple.domain.composite.ItemVenta;
 import com.ventasimple.domain.composite.OrdenVenta;
 import com.ventasimple.domain.i18n.ConfiguracionI18N;
 import com.ventasimple.domain.i18n.FormatoFecha;
@@ -68,11 +70,27 @@ public class PuntoDeVenta {
                 o.getDescuento().getNombre(),
                 totalFinal,
                 formatoMoneda.mostrarMonto(totalFinal),
-                o.getItems().size()
+                o.getItems().size(),
+                armarDetalle(o)
         );
         ventas.add(venta);
         nuevaOrden();
         return venta;
+    }
+
+    /** Construye el detalle de ítems (con kits y sus partes) ya formateado al cierre. */
+    private List<String> armarDetalle(OrdenVenta orden) {
+        List<String> detalle = new ArrayList<>();
+        for (ItemVenta item : orden.getItems()) {
+            detalle.add(item.getDescripcion() + " — " + formatoMoneda.mostrarMonto(item.calcularTotal()));
+            if (item instanceof ItemCompuesto kit) {
+                for (ItemVenta parte : kit.getPartes()) {
+                    detalle.add("    ↳ " + parte.getDescripcion()
+                            + " — " + formatoMoneda.mostrarMonto(parte.calcularTotal()));
+                }
+            }
+        }
+        return detalle;
     }
 
     public List<Venta> getVentas() {

@@ -26,6 +26,7 @@ class Venta {
   - total : double
   - totalFormateado : String
   - cantidadItems : int
+  - detalle : List<String>
 }
 
 ' ===================== COMPOSITE =====================

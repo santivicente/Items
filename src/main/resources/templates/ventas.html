@@ -34,7 +34,18 @@
                 <td th:text="${v.getNumero()}">OV-001</td>
                 <td th:text="${v.getFechaFormateada()}">--</td>
                 <td th:text="${v.getHora()}">--</td>
-                <td th:text="${v.getCantidadItems()}">0</td>
+                <td>
+                    <details>
+                        <summary style="cursor:pointer;"
+                                 th:text="${v.getCantidadItems() + (v.getCantidadItems() == 1 ? ' ítem' : ' ítems')}">
+                            1 ítem
+                        </summary>
+                        <ul style="margin:6px 0 0; padding-left:18px; font-size:14px;">
+                            <li th:each="linea : ${v.getDetalle()}" th:text="${linea}"
+                                style="white-space:pre;">línea</li>
+                        </ul>
+                    </details>
+                </td>
                 <td th:text="${v.getDescuento()}">Sin descuento</td>
                 <td class="der" th:text="${v.getTotalFormateado()}">$0</td>
             </tr>
