@@ -8,7 +8,7 @@ import java.util.List;
  * al cambiar su estado notifica a todos los observadores registrados.
  */
 public class ConfiguracionI18N implements IObservable {
-    private String formatoMoneda = "ARS";
+    private String formatoMoneda = "USD";
     private String formatoFecha = "dd/MM/yyyy";
     private final List<IObserver> observers = new ArrayList<>();
 

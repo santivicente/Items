@@ -15,9 +15,10 @@
         <form th:action="@{/preferencias}" method="post">
             <label for="moneda">Formato de moneda</label>
             <select id="moneda" name="moneda">
-                <option value="ARS" th:selected="${moneda == 'ARS'}">ARS ($)</option>
                 <option value="USD" th:selected="${moneda == 'USD'}">USD (US$)</option>
+                <option value="ARS" th:selected="${moneda == 'ARS'}">ARS ($)</option>
             </select>
+            <small>Cotización: US$ 1 = $ 1.500 (al pasar a pesos, el monto se multiplica por 1.500).</small>
 
             <label for="fecha">Formato de fecha</label>
             <select id="fecha" name="fecha">

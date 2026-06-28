@@ -42,10 +42,11 @@ Siguiendo las pautas de color vistas (Simplicidad, Consistencia, Claridad y regl
 
 ## 6. Internacionalización (i18n) ⭐
 Tema central de la cátedra que la app implementa de verdad: la pantalla **Preferencias** localiza los
-**formatos de moneda** (ARS $ / USD US$) y de **fecha** (dd/MM/yyyy, yyyy-MM-dd, MM/dd/yyyy). Estos
-formatos se aplican en el ticket (monto y fecha de la venta). Técnicamente se resuelve con el patrón
-**Observer** (`ConfiguracionI18N`): al cambiar la configuración, los formateadores se actualizan solos
-— el "modelo de localización" (recursos + código) visto en clase.
+**formatos de moneda** (ARS $ / USD US$) y de **fecha** (dd/MM/yyyy, yyyy-MM-dd, MM/dd/yyyy). Además
+de cambiar el formato, **convierte el valor** según la cotización (US$ 1 = $ 1.500), mostrando el monto
+real en cada moneda. Estos formatos se aplican en el ticket (monto y fecha de la venta). Técnicamente se
+resuelve con el patrón **Observer** (`ConfiguracionI18N`): al cambiar la configuración, los formateadores
+se actualizan solos — el "modelo de localización" (recursos + código) visto en clase.
 
 ## 7. DCU y prototipos
 Se aplicó **Diseño Centrado en el Usuario**: se definió primero el usuario y la navegación
