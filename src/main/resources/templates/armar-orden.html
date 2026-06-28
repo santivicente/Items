@@ -10,7 +10,8 @@
 <header th:replace="~{fragments :: cabecera('orden')}"></header>
 
 <main>
-    <div class="flash" th:if="${mensaje}" th:text="${mensaje}" role="status">Mensaje</div>
+    <div class="flash" th:if="${mensaje}" th:text="${mensaje}" role="status"
+         th:style="${tipoMensaje == 'warn'} ? 'background:#fff4e5;border-color:#ffcc80;color:#8a5300;' : ''">Mensaje</div>
 
     <div class="card">
         <h2>Catálogo de productos</h2>

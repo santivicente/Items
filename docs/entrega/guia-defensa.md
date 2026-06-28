@@ -102,9 +102,34 @@ Así el Composite queda intacto (como el TP10 original) y el descuento es un agr
 - **Color (reglas de Murch / daltonismo):** pocos colores (5±2), significado consistente (azul=acción,
   verde=total), y **nunca solo color**: los estados llevan texto. Foco de teclado visible (accesible).
 - **DCU + prototipos:** definimos usuario y navegación e hicimos **wireframes antes** de codear.
-- **Internacionalización (i18n) ⭐:** la pantalla Preferencias localiza **moneda y fecha**. Es el tema
-  de i18n que vio el profe, resuelto técnicamente con el patrón **Observer**. (Buen punto para lucirse:
-  une la teoría de UX con un patrón.)
+- **Internacionalización (i18n) ⭐:** la pantalla Preferencias localiza **moneda y fecha**, y además
+  **convierte** el valor (US$ 1 = $ 1.500). Es el tema de i18n que vio el profe, resuelto técnicamente
+  con el patrón **Observer**. (Buen punto para lucirse: une la teoría de UX con un patrón.)
+
+### Mapeo fino con los slides del profe (para citar de memoria)
+
+- **Diseño funcional, no decorativo (Steve Jobs):** empezamos por la arquitectura (4 patrones) y los
+  wireframes ANTES de la UI. El diseño es "cómo funciona", no una capa estética al final.
+- **UX ≠ Usabilidad ≠ UI ≠ IxD:** en nuestra app → **UI** = nav, tarjetas, botones; **IxD** (diseño de
+  interacción) = los formularios, el desplegable "Ver ítems", los checkboxes del kit; **Usabilidad** =
+  qué tan fácil es cobrar; **UX** = la experiencia completa del flujo.
+- **El Tao de la página (5 principios):**
+  1. *Simplicidad y elegancia* → UI limpia, pocos colores, formularios cortos.
+  2. *Proximidad y relevancia* (Gestalt) → cada cosa en su tarjeta; botón "Agregar" pegado a cada
+     producto; precio junto al nombre.
+  3. *Foco y retroalimentación* → el cartel "✓ Se agregó X", el resaltado del checkbox tildado, el
+     total que se actualiza, y los **mensajes con código de color** (verde = ok, amarillo = atención).
+  4. *Jerarquía de importancia y de tareas* → el TOTAL FINAL grande y verde; botón primario destacado;
+     la navegación en orden de tarea.
+  5. *La herramienta correcta* → desplegable para el descuento, checkboxes para el kit, `<details>`
+     para el detalle. Cada control para su propósito.
+- **Sistemas de navegación:** la barra superior es **navegación global** (en todas las pantallas) y la
+  **pestaña activa resaltada** responde "¿dónde estoy?".
+- **Uso del color (Murch / Simplicidad / Consistencia / Claridad):** ~4 colores; azul = acción,
+  verde = total, siempre con el mismo significado; **códigos de color en los mensajes**; estados con
+  texto + color (no solo color → daltonismo).
+- **Estándares y guías:** aplicamos una "guía de estilo" propia y consistente (un único encabezado en
+  fragmento Thymeleaf + una hoja de estilos común para todas las pantallas).
 
 ---
 

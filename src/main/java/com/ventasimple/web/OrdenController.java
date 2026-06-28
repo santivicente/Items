@@ -36,6 +36,7 @@ public class OrdenController {
         Catalogo.Producto p = Catalogo.porId(productoId);
         pdv().getOrdenActual().add(new ItemSimple(p.getNombre(), p.getPrecio()));
         ra.addFlashAttribute("mensaje", "✓ Se agregó \"" + p.getNombre() + "\" a la orden.");
+        ra.addFlashAttribute("tipoMensaje", "ok");
         return "redirect:/";
     }
 
@@ -52,8 +53,10 @@ public class OrdenController {
             pdv().getOrdenActual().add(kit);
             ra.addFlashAttribute("mensaje",
                     "✓ Se agregó el kit \"" + kitNombre + "\" con " + productoIds.size() + " productos.");
+            ra.addFlashAttribute("tipoMensaje", "ok");
         } else {
             ra.addFlashAttribute("mensaje", "⚠ Elegí al menos un producto para armar el kit.");
+            ra.addFlashAttribute("tipoMensaje", "warn");
         }
         return "redirect:/";
     }
