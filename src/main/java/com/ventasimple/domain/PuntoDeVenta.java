@@ -58,13 +58,16 @@ public class PuntoDeVenta {
      */
     public Venta cerrarVenta() {
         OrdenVenta o = ordenActual;
+        LocalDate hoy = LocalDate.now();
+        double totalFinal = o.calcularTotalFinal();
         Venta venta = new Venta(
                 o.getNumero(),
-                LocalDate.now(),
+                hoy,
+                formatoFecha.mostrarFecha(hoy),
                 LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
                 o.getDescuento().getNombre(),
-                o.calcularTotal(),
-                o.calcularTotalFinal(),
+                totalFinal,
+                formatoMoneda.mostrarMonto(totalFinal),
                 o.getItems().size()
         );
         ventas.add(venta);

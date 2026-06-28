@@ -84,10 +84,9 @@ public class OrdenController {
 
     @GetMapping("/ventas")
     public String ventas(Model model) {
-        PuntoDeVenta pdv = pdv();
-        model.addAttribute("ventas", pdv.getVentas());
-        model.addAttribute("fmt", pdv.getFormatoMoneda());
-        model.addAttribute("fmtFecha", pdv.getFormatoFecha());
+        // Cada venta ya guarda su total y fecha formateados al momento del cierre,
+        // por eso no se vuelve a formatear acá (así no cambia el historial al cambiar la config).
+        model.addAttribute("ventas", pdv().getVentas());
         return "ventas";
     }
 

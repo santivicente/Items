@@ -32,11 +32,11 @@
             <tbody>
             <tr th:each="v : ${ventas}">
                 <td th:text="${v.getNumero()}">OV-001</td>
-                <td th:text="${fmtFecha.mostrarFecha(v.getFecha())}">--</td>
+                <td th:text="${v.getFechaFormateada()}">--</td>
                 <td th:text="${v.getHora()}">--</td>
                 <td th:text="${v.getCantidadItems()}">0</td>
                 <td th:text="${v.getDescuento()}">Sin descuento</td>
-                <td class="der" th:text="${fmt.mostrarMonto(v.getTotal())}">$0</td>
+                <td class="der" th:text="${v.getTotalFormateado()}">$0</td>
             </tr>
             </tbody>
         </table>
