@@ -64,13 +64,24 @@ main {
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.flash {
+    background: #e6f4ea;
+    border: 1px solid #b7dfc1;
+    color: #1e5631;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-weight: 600;
 }
 
 h2 { margin-top: 0; font-size: 19px; }
 
 label { display: block; font-weight: 600; margin: 10px 0 4px; }
 
-input, select {
+input:not([type="checkbox"]):not([type="radio"]), select {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -105,22 +116,31 @@ button:hover, .btn:hover { background: var(--azul-osc); }
 .check-grid {
     border: 1px solid var(--borde);
     border-radius: 8px;
-    padding: 12px;
+    padding: 6px;
     margin-top: 8px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 .check-grid legend { font-weight: 600; padding: 0 6px; }
 label.check {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
     font-weight: 400;
     margin: 0;
     cursor: pointer;
 }
-label.check input { width: auto; }
+label.check:hover { background: var(--gris); }
+label.check:has(input:checked) { background: #e3f0fc; font-weight: 600; }
+label.check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    flex: none;
+    accent-color: var(--azul);
+}
 
 ul.items { list-style: none; padding: 0; }
 ul.items li form { margin: 0; }

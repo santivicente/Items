@@ -10,6 +10,8 @@
 <header th:replace="~{fragments :: cabecera('orden')}"></header>
 
 <main>
+    <div class="flash" th:if="${mensaje}" th:text="${mensaje}" role="status">Mensaje</div>
+
     <div class="card">
         <h2>Catálogo de productos</h2>
         <ul class="items">

@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -31,15 +32,17 @@ public class OrdenController {
     }
 
     @PostMapping("/items/simple")
-    public String agregarSimple(@RequestParam int productoId) {
+    public String agregarSimple(@RequestParam int productoId, RedirectAttributes ra) {
         Catalogo.Producto p = Catalogo.porId(productoId);
         pdv().getOrdenActual().add(new ItemSimple(p.getNombre(), p.getPrecio()));
+        ra.addFlashAttribute("mensaje", "✓ Se agregó \"" + p.getNombre() + "\" a la orden.");
         return "redirect:/";
     }
 
     @PostMapping("/items/kit")
     public String agregarKit(@RequestParam String kitNombre,
-                             @RequestParam(required = false) List<Integer> productoIds) {
+                             @RequestParam(required = false) List<Integer> productoIds,
+                             RedirectAttributes ra) {
         if (productoIds != null && !productoIds.isEmpty()) {
             ItemCompuesto kit = new ItemCompuesto(kitNombre);
             for (Integer id : productoIds) {
@@ -47,6 +50,10 @@ public class OrdenController {
                 kit.add(new ItemSimple(p.getNombre(), p.getPrecio()));
             }
             pdv().getOrdenActual().add(kit);
+            ra.addFlashAttribute("mensaje",
+                    "✓ Se agregó el kit \"" + kitNombre + "\" con " + productoIds.size() + " productos.");
+        } else {
+            ra.addFlashAttribute("mensaje", "⚠ Elegí al menos un producto para armar el kit.");
         }
         return "redirect:/";
     }
