@@ -66,8 +66,11 @@ se "agrupan en combos/kits", y al final sale el "ticket" con el total y el descu
 ```
 PuntoDeVenta (Singleton)
  ├─ nombre
- ├─ ordenes : List<OrdenVenta>
+ ├─ ordenActual : OrdenVenta
+ ├─ ventas : List<Venta>      (historial de ventas cerradas)
  └─ config : ConfiguracionI18N
+
+Venta  (foto de una venta cerrada: numero, fecha, hora, descuento, total formateado, items)
 
 ItemVenta (interface, Composite Component)
  ├─ calcularTotal() : double

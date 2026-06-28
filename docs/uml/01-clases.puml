@@ -6,12 +6,26 @@ skinparam classAttributeIconSize 0
 class PuntoDeVenta <<Singleton>> {
   - {static} instancia : PuntoDeVenta
   - nombre : String
-  - ordenes : List<OrdenVenta>
+  - ordenActual : OrdenVenta
+  - ventas : List<Venta>
   - config : ConfiguracionI18N
   - PuntoDeVenta()
   + {static} getInstancia() : PuntoDeVenta
-  + registrarOrden(o : OrdenVenta) : void
+  + getOrdenActual() : OrdenVenta
+  + nuevaOrden() : OrdenVenta
+  + cerrarVenta() : Venta
+  + getVentas() : List<Venta>
   + getConfiguracion() : ConfiguracionI18N
+}
+
+class Venta {
+  - numero : String
+  - fechaFormateada : String
+  - hora : String
+  - descuento : String
+  - total : double
+  - totalFormateado : String
+  - cantidadItems : int
 }
 
 ' ===================== COMPOSITE =====================
@@ -94,6 +108,7 @@ IObserver <|.. FormatoMoneda
 IObserver <|.. FormatoFecha
 
 ' ===================== RELACIONES GLOBALES =====================
-PuntoDeVenta o-- "0..*" OrdenVenta
+PuntoDeVenta --> "1" OrdenVenta : ordenActual
+PuntoDeVenta o-- "0..*" Venta : ventas
 PuntoDeVenta *-- ConfiguracionI18N
 @enduml
