@@ -5,6 +5,12 @@ import com.ventasimple.domain.i18n.ConfiguracionI18N;
 import com.ventasimple.domain.i18n.FormatoFecha;
 import com.ventasimple.domain.i18n.FormatoMoneda;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Singleton: única instancia del punto de venta. Mantiene la orden actual y la
  * configuración de internacionalización (con sus observadores de formato),
@@ -17,7 +23,9 @@ public class PuntoDeVenta {
     private final ConfiguracionI18N config;
     private final FormatoMoneda formatoMoneda;
     private final FormatoFecha formatoFecha;
+    private final List<Venta> ventas = new ArrayList<>();
     private OrdenVenta ordenActual;
+    private int contadorOrdenes = 1;
 
     private PuntoDeVenta() {
         this.nombre = "VentaSimple";
@@ -39,8 +47,33 @@ public class PuntoDeVenta {
     }
 
     public OrdenVenta nuevaOrden() {
-        this.ordenActual = new OrdenVenta("OV-" + System.currentTimeMillis());
+        contadorOrdenes++;
+        this.ordenActual = new OrdenVenta(String.format("OV-%03d", contadorOrdenes));
         return ordenActual;
+    }
+
+    /**
+     * Cierra la orden actual: guarda una foto de la venta en el historial y
+     * arranca una orden nueva. El registro de ventas vive en esta única caja (Singleton).
+     */
+    public Venta cerrarVenta() {
+        OrdenVenta o = ordenActual;
+        Venta venta = new Venta(
+                o.getNumero(),
+                LocalDate.now(),
+                LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                o.getDescuento().getNombre(),
+                o.calcularTotal(),
+                o.calcularTotalFinal(),
+                o.getItems().size()
+        );
+        ventas.add(venta);
+        nuevaOrden();
+        return venta;
+    }
+
+    public List<Venta> getVentas() {
+        return ventas;
     }
 
     public String getNombre() {

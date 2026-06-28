@@ -132,4 +132,22 @@ ul.arbol { margin: 6px 0 6px 18px; }
     padding: 12px;
     margin-top: 10px;
 }
-.acciones { display: flex; gap: 12px; flex-wrap: wrap; }
+.acciones { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-start; }
+
+table.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 4px;
+}
+table.tabla th, table.tabla td {
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--borde);
+    text-align: left;
+}
+table.tabla th {
+    background: var(--gris);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+table.tabla .der { text-align: right; font-weight: 700; }

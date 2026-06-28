@@ -43,7 +43,12 @@
             <span th:text="${fmt.mostrarMonto(totalFinal)}">$0</span>
         </div>
 
-        <a class="btn" th:href="@{/}">Volver a la orden</a>
+        <div class="acciones">
+            <form th:action="@{/cerrar}" method="post">
+                <button type="submit" th:disabled="${items.isEmpty()}">✓ Cerrar venta</button>
+            </form>
+            <a class="btn btn-sec" th:href="@{/}">Volver a la orden</a>
+        </div>
     </div>
 </main>
 </body>

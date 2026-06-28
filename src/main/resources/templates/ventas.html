@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VentaSimple — Ventas emitidas</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: cabecera('ventas')}"></header>
+
+<main>
+    <div class="card">
+        <h2>📒 Ventas emitidas</h2>
+
+        <p th:if="${ventas.isEmpty()}">
+            <em>Todavía no se cerró ninguna venta. Armá una orden, aplicá el descuento y tocá
+                "Cerrar venta" en el ticket.</em>
+        </p>
+
+        <table th:if="${!ventas.isEmpty()}" class="tabla">
+            <thead>
+            <tr>
+                <th>N°</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Ítems</th>
+                <th>Descuento</th>
+                <th class="der">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="v : ${ventas}">
+                <td th:text="${v.getNumero()}">OV-001</td>
+                <td th:text="${fmtFecha.mostrarFecha(v.getFecha())}">--</td>
+                <td th:text="${v.getHora()}">--</td>
+                <td th:text="${v.getCantidadItems()}">0</td>
+                <td th:text="${v.getDescuento()}">Sin descuento</td>
+                <td class="der" th:text="${fmt.mostrarMonto(v.getTotal())}">$0</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="total-row" th:if="${!ventas.isEmpty()}">
+            <strong th:text="'Ventas registradas: ' + ${ventas.size()}">Ventas registradas: 0</strong>
+        </div>
+
+        <a class="btn" th:href="@{/}">Armar nueva orden</a>
+    </div>
+</main>
+</body>
+</html>

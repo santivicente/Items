@@ -58,7 +58,9 @@ Singleton, cualquier módulo obtiene siempre el mismo `PuntoDeVenta`.
 
 **5. Participantes:**
 - `PuntoDeVenta` (Singleton): atributo estático privado `instancia`; constructor privado;
-  método estático `getInstancia()`. Mantiene el nombre, la lista de órdenes y la `ConfiguracionI18N`.
+  método estático `getInstancia()`. Mantiene la orden actual, el **registro de ventas emitidas**
+  (`List<Venta>`) y la `ConfiguracionI18N`. Al cerrar una venta, guarda una foto (`Venta`) en el
+  historial y abre una orden nueva.
 
 **6. Colaboración:** los servicios acceden con `PuntoDeVenta.getInstancia()`. La primera llamada crea
 la instancia; las siguientes la retornan. Implementación thread-safe con double-checked locking.

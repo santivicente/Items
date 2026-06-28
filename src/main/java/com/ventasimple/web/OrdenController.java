@@ -73,6 +73,24 @@ public class OrdenController {
         return "ticket";
     }
 
+    @PostMapping("/cerrar")
+    public String cerrarVenta() {
+        OrdenVenta orden = pdv().getOrdenActual();
+        if (!orden.getItems().isEmpty()) {
+            pdv().cerrarVenta();
+        }
+        return "redirect:/ventas";
+    }
+
+    @GetMapping("/ventas")
+    public String ventas(Model model) {
+        PuntoDeVenta pdv = pdv();
+        model.addAttribute("ventas", pdv.getVentas());
+        model.addAttribute("fmt", pdv.getFormatoMoneda());
+        model.addAttribute("fmtFecha", pdv.getFormatoFecha());
+        return "ventas";
+    }
+
     private void cargarComunes(Model model) {
         PuntoDeVenta pdv = pdv();
         OrdenVenta orden = pdv.getOrdenActual();

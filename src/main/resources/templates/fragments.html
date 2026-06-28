@@ -10,6 +10,8 @@
            th:attr="aria-current=${activo == 'resumen'} ? 'page'">Resumen</a>
         <a th:href="@{/total}" th:classappend="${activo == 'total'} ? 'activo'"
            th:attr="aria-current=${activo == 'total'} ? 'page'">Total y descuento</a>
+        <a th:href="@{/ventas}" th:classappend="${activo == 'ventas'} ? 'activo'"
+           th:attr="aria-current=${activo == 'ventas'} ? 'page'">Ventas emitidas</a>
         <a th:href="@{/preferencias}" th:classappend="${activo == 'preferencias'} ? 'activo'"
            th:attr="aria-current=${activo == 'preferencias'} ? 'page'">Preferencias</a>
     </nav>
